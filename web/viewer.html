@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>查看模型 · 声音化石</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/three-addons/"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="filewarn" hidden style="max-width:720px;margin:60px auto;padding:28px 32px;background:#fff8e6;border:1px solid #d8c9a8;font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.7">
+  <b style="font-size:17px">请用本地服务打开，双击文件是打不开的</b>
+  <p style="margin:14px 0 6px">浏览器不允许 <code>file://</code> 页面加载 ES 模块。在项目目录里执行：</p>
+  <pre style="background:#f3ecd8;padding:10px 14px;margin:0 0 6px;font-family:ui-monospace,Consolas,monospace">python serve.py 8080</pre>
+  <p style="margin:0">然后打开 <code>http://127.0.0.1:8080/viewer.html</code></p>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (location.protocol !== 'file:') return;
+    document.getElementById('filewarn').hidden = false;
+    var app = document.getElementById('app');
+    if (app) app.hidden = true;
+  });
+</script>
+
+<header class="top">
+  <div class="brand">查看模型<span class="brand-en">VIEWER</span></div>
+  <nav><a href="index.html">制作台</a><a href="museum.html">标本册</a></nav>
+</header>
+
+<main class="grid" id="app">
+  <section class="col">
+    <div class="panel">
+      <h2>看一个模型文件</h2>
+      <p class="muted">
+        把 <b>.stl</b> / <b>.obj</b> / <b>.glb</b> 拖到下面这块区域，或者点按钮选。
+        只是看看，不会上传，文件不离开这台电脑。
+      </p>
+      <div id="drop" style="margin:14px 0;padding:36px 20px;border:2px dashed #c9bfae;text-align:center;color:#8a8578;background:#faf7f0">
+        拖到这里
+      </div>
+      <div class="row">
+        <button id="btnPick" class="primary">选择模型文件</button>
+        <input type="file" id="pick" accept=".stl,.obj,.glb" hidden>
+      </div>
+      <p id="vName" class="muted">尚未载入</p>
+      <dl id="vInfo" class="kv" hidden></dl>
+      <p class="muted" style="margin-top:10px">
+        想直接打印的话，切片软件（Bambu Studio / OrcaSlicer / PrusaSlicer / Cura）开 <b>.stl</b>；
+        想改形状用 Blender，三种都能开。
+      </p>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="panel">
+      <h2>预览</h2>
+      <div class="stage"><canvas id="view"></canvas></div>
+      <div class="row">
+        <button id="btnFit">回正视角</button>
+        <button id="btnColor">换个配色</button>
+      </div>
+      <p id="vTip" class="muted">左键拖动旋转，滚轮缩放</p>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="src/viewer-main.js"></script>
+
+</body>
+</html>

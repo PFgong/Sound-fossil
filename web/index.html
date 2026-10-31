@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>声音化石 · Sound Fossil</title>
+<link rel="stylesheet" href="style.css">
+<script src="vendor/qrcode.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/three-addons/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- 直接双击打开时 ES 模块会被 CORS 拦掉，页面看着在、其实全死。这里明说，别让人干瞪眼。 -->
+<div id="filewarn" hidden style="max-width:720px;margin:60px auto;padding:28px 32px;background:#fff8e6;border:1px solid #d8c9a8;font-family:system-ui,'Microsoft YaHei',sans-serif;line-height:1.7">
+  <b style="font-size:17px">请用本地服务打开，双击文件是打不开的</b>
+  <p style="margin:14px 0 6px">浏览器不允许 <code>file://</code> 页面加载 ES 模块，所以现在所有按钮都没有反应 —— 这不是坏了。</p>
+  <p style="margin:0 0 6px">在项目目录里执行：</p>
+  <pre style="background:#f3ecd8;padding:10px 14px;margin:0 0 6px;font-family:ui-monospace,Consolas,monospace">python serve.py 8080</pre>
+  <p style="margin:0">然后浏览器打开 <code>http://127.0.0.1:8080/</code></p>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (location.protocol !== 'file:') return;
+    document.getElementById('filewarn').hidden = false;
+    var app = document.getElementById('app');
+    if (app) app.hidden = true;
+  });
+</script>
+
+<header class="top">
+  <div class="brand">声音化石<span class="brand-en">SOUND FOSSIL</span></div>
+  <nav><a href="museum.html">标本册</a><a href="viewer.html">查看模型</a></nav>
+</header>
+
+<main class="grid" id="app">
+
+  <section class="col">
+
+    <div class="panel">
+      <h2>一、取声</h2>
+      <div class="row">
+        <button id="btnUpload" class="primary">上传音频</button>
+        <input type="file" id="file" accept="audio/*" hidden>
+        <button id="btnRecord">录音</button>
+        <button id="btnStop" hidden>完成</button>
+      </div>
+      <div class="row">
+        <select id="demo"></select>
+        <button id="btnDemo">载入示例</button>
+      </div>
+      <p id="srcName" class="muted">尚未载入声音</p>
+      <p id="recTime" class="muted" hidden></p>
+      <dl id="audioInfo" class="kv" hidden></dl>
+      <button id="btnPlay" class="wide">试听</button>
+      <div class="field">
+        <label>起点 <output id="outStart">0.0s</output></label>
+        <input type="range" id="rStart" min="0" max="60" step="0.5" value="0">
+      </div>
+      <div class="field">
+        <label>长度 <output id="outLen">20s</output></label>
+        <input type="range" id="rLen" min="5" max="60" step="1" value="20">
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>二、造型</h2>
+      <div class="shapes" id="shapes"></div>
+
+      <div class="field" id="fSize">
+        <label>直径 <output id="outSize">80 mm</output></label>
+        <input type="range" id="rSize" min="50" max="160" step="5" value="80">
+      </div>
+      <div class="field" id="fHeight">
+        <label>浮雕高度 <output id="outHeight">8 mm</output></label>
+        <input type="range" id="rHeight" min="3" max="20" step="1" value="8">
+      </div>
+      <div class="field" id="fBase">
+        <label>底板厚度 <output id="outBase">2.5 mm</output></label>
+        <input type="range" id="rBase" min="1.5" max="10" step="0.5" value="2.5">
+      </div>
+      <div class="field" id="fColH" hidden>
+        <label>柱高 <output id="outColH">45 mm</output></label>
+        <input type="range" id="rColH" min="25" max="90" step="5" value="45">
+      </div>
+      <div class="field" id="fColR" hidden>
+        <label>最大半径 <output id="outColR">10 mm</output></label>
+        <input type="range" id="rColR" min="6" max="20" step="1" value="10">
+      </div>
+      <div class="field" id="fColA" hidden>
+        <label>起伏 <output id="outColA">5 mm</output></label>
+        <input type="range" id="rColA" min="1" max="10" step="1" value="5">
+      </div>
+
+      <div class="field">
+        <label>网格 <output id="outGrid">200</output></label>
+        <input type="range" id="rGrid" min="120" max="280" step="40" value="200">
+      </div>
+      <div class="field">
+        <label>增益 <output id="outGain">1.0</output></label>
+        <input type="range" id="rGain" min="0.4" max="2.5" step="0.1" value="1">
+      </div>
+
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="cRim" checked> 边缘羽化</label>
+        <label class="check" id="lStrata" hidden><input type="checkbox" id="cStrata" checked> 层理</label>
+        <label class="check"><input type="checkbox" id="cInvert"> 反相凹刻</label>
+      </div>
+
+      <div id="estimate" class="estimate"></div>
+    </div>
+
+  </section>
+
+  <section class="col">
+    <div class="stage">
+      <canvas id="view"></canvas>
+      <div class="stage-bar">
+        <button id="btnColor">高度着色</button>
+        <button id="btnFit">复位视角</button>
+        <span id="triInfo" class="muted"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="col">
+
+    <div class="panel">
+      <h2>三、标本卡</h2>
+      <div id="cardBox" class="card-box"></div>
+      <div class="field">
+        <label>标题</label>
+        <input type="text" id="tTitle" maxlength="20" placeholder="无题">
+      </div>
+      <div class="field">
+        <label>地点</label>
+        <input type="text" id="tPlace" placeholder="可留空">
+        <button id="btnGeo" class="mini">定位</button>
+      </div>
+      <div class="field">
+        <label>二维码指向</label>
+        <input type="text" id="tQr" placeholder="填入标本页网址后才会印出二维码">
+      </div>
+      <div class="row">
+        <button id="btnCardPng">下载卡片</button>
+        <button id="btnPrint">打印 A4</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>四、导出模型</h2>
+      <div class="row">
+        <button id="btnStl" class="primary">STL</button>
+        <button id="btnObj">OBJ</button>
+        <button id="btnGlb">GLB</button>
+      </div>
+      <div class="row">
+        <button id="btnPng">高度图</button>
+        <button id="btnSvg">SVG</button>
+      </div>
+      <p id="expInfo" class="muted small"></p>
+    </div>
+
+    <div class="panel">
+      <h2>五、发布</h2>
+      <p class="muted small">
+        下载自包含的标本页，上传到任意静态托管，把地址粘回上面的「二维码指向」，卡片就能扫码听见声音。
+      </p>
+      <div class="row">
+        <button id="btnPage">下载标本页</button>
+        <button id="btnSave">存入标本册</button>
+      </div>
+      <p id="pubInfo" class="muted small"></p>
+    </div>
+
+  </section>
+
+</main>
+
+<div id="printArea"></div>
+
+<script>
+// 出错时把原因顶在页面上方，别让用户对着白屏猜。
+window.addEventListener('error', function (e) {
+  var box = document.createElement('pre');
+  box.id = 'errbar';
+  box.textContent = '出错了：' + (e.message || e.error) + '\n' + (e.filename || '') + ' 第 ' + (e.lineno || '?') + ' 行';
+  box.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;margin:0;padding:10px 16px;background:#FCEBEB;color:#791F1F;border-bottom:1px solid #F09595;font:12px/1.6 monospace;white-space:pre-wrap';
+  if (!document.getElementById('errbar')) document.body.appendChild(box);
+});
+</script>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

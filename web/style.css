@@ -1,0 +1,344 @@
+:root {
+  --paper: #f5f1e8;
+  --page: #efece4;
+  --ink: #1f2328;
+  --muted: #5f5e5a;
+  --rule: #d3d1c7;
+  --serif: 'Songti SC', 'Source Han Serif SC', 'Noto Serif SC', Georgia, serif;
+  --sans: system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --mono: 'SFMono-Regular', Consolas, 'Roboto Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.6 var(--sans);
+}
+
+.top {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  font: 500 17px/1 var(--serif);
+}
+
+.brand-en {
+  font: 11px/1 var(--mono);
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin-left: 12px;
+}
+
+.top nav a {
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  padding: 6px 12px;
+}
+
+.top nav a:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 340px;
+  gap: 16px;
+  padding: 16px;
+  height: calc(100% - 52px);
+}
+
+.col {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.col::-webkit-scrollbar {
+  width: 8px;
+}
+
+.col::-webkit-scrollbar-thumb {
+  background: #cfcbc0;
+}
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 16px 18px 18px;
+}
+
+.panel h2 {
+  margin: 0 0 14px;
+  font: 500 15px/1 var(--serif);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+button {
+  font: 13px/1 var(--sans);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+button.primary:hover {
+  opacity: 0.86;
+}
+
+button.on {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+button.mini {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+button.wide {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.shapes {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.shapes button {
+  flex: 1;
+}
+
+select {
+  font: 13px/1 var(--sans);
+  padding: 8px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+}
+
+input[type='text'] {
+  font: 13px/1 var(--sans);
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  width: 100%;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.field output {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.field:has(button) {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.field:has(button) label {
+  grid-column: 1 / -1;
+}
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--ink);
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 4px 0 12px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.estimate {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  line-height: 1.9;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+p.muted {
+  margin: 0 0 10px;
+}
+
+.stage {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  position: relative;
+}
+
+/* 绝对定位是有意的：canvas 的 width/height 属性是固有尺寸，
+   一旦参与 flex 布局就会和「按显示尺寸重设缓冲区」互相喂，越撑越大。
+   让它脱出文档流，尺寸只由 .stage 决定。 */
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stage-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-top: 1px solid var(--rule);
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+}
+
+.stage-bar span {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.card-box {
+  border: 1px solid var(--rule);
+  margin-bottom: 14px;
+  line-height: 0;
+}
+
+.card-box svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+#printArea {
+  display: none;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  body > *:not(#printArea) {
+    display: none !important;
+  }
+
+  #printArea {
+    display: block;
+  }
+
+  #printArea svg {
+    width: 210mm;
+    height: 297mm;
+    display: block;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+}

@@ -1,0 +1,115 @@
+.shelf-wrap {
+  padding: 24px 20px 40px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.specimen {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 14px;
+}
+
+.specimen .card-box {
+  border: 1px solid var(--rule);
+  line-height: 0;
+}
+
+.specimen .card-box svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.specimen .bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.specimen .bar button {
+  flex: 1;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 35, 40, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 20;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-inner {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  width: min(1080px, 100%);
+  height: min(680px, 90vh);
+}
+
+.modal-inner canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #f4f1ea;
+}
+
+.modal-side {
+  padding: 20px;
+  border-left: 1px solid var(--rule);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-side .num {
+  font: 12px/1 var(--mono);
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 6px 8px;
+  align-self: flex-start;
+}
+
+.modal-side h2 {
+  font: 500 22px/1.4 var(--serif);
+  margin: 14px 0 12px;
+}
+
+.modal-side audio {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.modal-side .row {
+  margin-top: auto;
+}
+
+.modal-side .row button {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .modal-inner {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .modal-inner canvas {
+    height: 320px;
+  }
+}

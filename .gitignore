@@ -1,0 +1,7 @@
+# 测试音频与生成产物：24MB，用 tools/make-wav.js 现造即可
+tools/testdata/
+
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
